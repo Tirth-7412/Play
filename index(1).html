@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Game Hub Pro</title>
+<style>
+:root{--blue:#159fe5;--blue2:#69c8ff;--navy:#142c3d;--bg:#f4faff;--card:#fff;--muted:#6c8190;--line:#dceef7;--good:#29b36b;--gold:#f4b400;--shadow:0 10px 28px rgba(20,50,80,.08)}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial,sans-serif}
+html{scroll-behavior:smooth} body{background:radial-gradient(circle at 10% 0%,#e9f8ff 0,transparent 28%),var(--bg);color:#172b3a;min-height:100vh}
+button,input{font:inherit} button{touch-action:manipulation}
+.navbar{height:70px;padding:0 5%;display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:50}
+.logo{font-weight:900;color:var(--blue);font-size:21px}.logo span{color:var(--navy)}
+.nav-links{display:flex;gap:22px;list-style:none}.nav-links a{color:#496273;text-decoration:none;font-weight:700}.nav-links a:hover{color:var(--blue)}
+.profile-chip{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:#f7fcff;padding:7px 10px;border-radius:999px;cursor:pointer}.avatar{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:#dff4ff}
+.hero{margin:28px 5%;padding:55px 7%;border-radius:26px;background:linear-gradient(135deg,#dff5ff,#f2fbff);position:relative;overflow:hidden;box-shadow:var(--shadow);animation:rise .6s ease}
+.hero:after{content:"";position:absolute;width:260px;height:260px;border-radius:50%;right:3%;top:-110px;background:rgba(21,159,229,.12);animation:float 5s ease-in-out infinite}
+.hero h1{font-size:clamp(36px,5vw,62px);max-width:700px;margin-bottom:12px}.hero p{color:#59717f;font-size:18px;margin-bottom:22px}
+.search{display:flex;max-width:560px;background:#fff;border:1px solid var(--line);padding:6px;border-radius:14px;box-shadow:0 10px 28px rgba(22,107,145,.08)}.search input{flex:1;border:0;outline:0;padding:12px;min-width:0}.search button,.small-primary{border:0;background:var(--blue);color:#fff;padding:11px 16px;border-radius:10px;cursor:pointer;font-weight:800}.search button:hover,.small-primary:hover{filter:brightness(.95);transform:translateY(-1px)}
+.section{margin:38px 5%}.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}.section-head h2{font-size:28px}.subtle{color:var(--muted);font-size:14px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.stat{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 5px 18px rgba(20,50,80,.05);transition:.2s}.stat:hover{transform:translateY(-3px)}.stat strong{display:block;font-size:25px;margin-top:5px}
+.categories{display:flex;flex-wrap:wrap;gap:10px}.cat{padding:9px 15px;border-radius:999px;border:1px solid var(--line);background:#fff;color:#48616f;cursor:pointer;font-weight:700}.cat.active,.cat:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}.game-card{background:#fff;border:1px solid transparent;border-radius:18px;overflow:hidden;box-shadow:0 6px 18px rgba(20,50,80,.07);transition:.25s}.game-card:hover{transform:translateY(-6px);border-color:var(--blue2);box-shadow:0 14px 30px rgba(50,170,230,.18)}
+.cover{height:150px;display:grid;place-items:center;font-size:64px;position:relative}.cover.action{background:linear-gradient(135deg,#152f40,#238bc0)}.cover.puzzle{background:linear-gradient(135deg,#557d91,#b2e9ff)}.cover.racing{background:linear-gradient(135deg,#102c45,#38a9e8)}.cover.adventure{background:linear-gradient(135deg,#25647e,#75d5ff)}.cover.strategy{background:linear-gradient(135deg,#253e50,#75bddd)}
+.game-body{padding:16px}.game-body h3{margin-bottom:5px}.game-body p{color:var(--muted);font-size:13px;margin-bottom:10px}.meta{display:flex;align-items:center;justify-content:space-between}.play{border:0;padding:8px 13px;border-radius:8px;background:#e5f6ff;color:#087cb8;font-weight:800;font-size:12px;cursor:pointer}.play:hover{background:var(--blue);color:#fff}.fav{border:0;background:#f2f9fc;border-radius:50%;width:36px;height:36px;cursor:pointer}
+.table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden}.table th,.table td{padding:13px;text-align:left;border-bottom:1px solid #eef5f8}.table th{background:#f6fbfe}.table tr.me{background:#eefaff;font-weight:800}
+.profile-panel{background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px;display:grid;grid-template-columns:auto 1fr auto;gap:18px;align-items:center}.big-avatar{width:72px;height:72px;border-radius:50%;background:#dff4ff;display:grid;place-items:center;font-size:34px}.progress{height:10px;background:#edf5f8;border-radius:999px;overflow:hidden;margin-top:10px}.bar{height:100%;background:linear-gradient(90deg,var(--blue),var(--blue2));width:0;transition:width .35s}.coins{color:#a77500;font-weight:900}
+.modal{display:none;position:fixed;inset:0;background:rgba(9,29,43,.75);z-index:100;padding:18px;align-items:center;justify-content:center}.modal.show{display:flex;animation:fade .18s ease}.window{width:min(920px,96vw);max-height:93vh;overflow:auto;background:#fff;border-radius:20px;padding:22px;position:relative;box-shadow:0 24px 70px rgba(0,0,0,.28);animation:pop .2s ease}.close{position:absolute;right:12px;top:12px;width:34px;height:34px;border:0;border-radius:50%;background:#eef7fb;cursor:pointer}.game-title{text-align:center;margin-bottom:12px}
+.hud{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-bottom:10px}.pill{padding:7px 10px;border-radius:999px;background:#eff9fe;border:1px solid var(--line);font-size:13px;font-weight:800}
+.canvas{display:block;margin:0 auto;background:#0c202e;border-radius:15px;max-width:100%;height:auto}
+.controls{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:12px}.controls button,.touch button{border:0;background:#e6f7ff;color:#087cb8;padding:10px 13px;border-radius:9px;cursor:pointer;font-weight:800;min-height:42px}
+.ttt{width:300px;max-width:100%;margin:auto;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.ttt button{height:88px;border:0;border-radius:12px;background:#e8f8ff;color:#087cb8;font-size:36px;font-weight:900;cursor:pointer}.ttt button:disabled{cursor:default}
+.memory{display:grid;grid-template-columns:repeat(4,82px);gap:10px;justify-content:center}.memory button{width:82px;height:82px;border:0;border-radius:12px;background:#159fe5;color:white;font-size:30px;cursor:pointer}.memory button.open,.memory button.matched{background:#e8f8ff;color:#087cb8}
+.race{position:relative;width:330px;height:500px;max-width:100%;margin:auto;background:#25313a;border-radius:18px;overflow:hidden;border:6px solid #dce8ee}.roadline{position:absolute;left:50%;transform:translateX(-50%);width:8px;height:70px;background:#dbe6eb;box-shadow:0 120px #dbe6eb,0 240px #dbe6eb,0 360px #dbe6eb;opacity:.7}.car{position:absolute;font-size:42px;bottom:18px;transform:translateX(-50%);z-index:3}.obstacle{position:absolute;font-size:36px;z-index:2}
+.world{position:relative;width:100%;max-width:720px;height:430px;margin:auto;border-radius:18px;overflow:hidden;background:linear-gradient(#79d7ff 0 58%,#76be6c 58% 100%);border:1px solid #b9e7f5}.world .ground{position:absolute;inset:58% 0 0;background:linear-gradient(#6fae5d,#4e8b4f)}.herochar{position:absolute;width:40px;height:52px;display:grid;place-items:center;font-size:38px;z-index:3}.npc{position:absolute;font-size:35px}.coin{position:absolute;font-size:24px}
+.shooter{border-radius:18px;overflow:hidden;border:1px solid #20465d;cursor:crosshair}.enemy{position:absolute;font-size:32px;z-index:2}.bullet{pointer-events:none}.task-box{background:#f7fcff;border:1px solid var(--line);border-radius:14px;padding:12px;margin-top:12px}
+.form{display:grid;gap:10px}.form input{padding:11px;border:1px solid var(--line);border-radius:10px;outline:0}.avatar-options{display:flex;gap:8px;flex-wrap:wrap}.avatar-options button{border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px 12px;cursor:pointer;font-size:20px}.avatar-options button.selected{border-color:var(--blue);background:#eaf8ff}
+.empty{text-align:center;padding:25px;color:var(--muted);display:none}
+.toast{position:fixed;bottom:22px;right:22px;background:#163447;color:#fff;padding:12px 16px;border-radius:12px;display:none;z-index:200;box-shadow:0 10px 25px rgba(0,0,0,.2)}.toast.show{display:block;animation:toastIn .2s ease}
+footer{margin-top:55px;padding:28px;text-align:center;background:var(--navy);color:#b9d3e1}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}@keyframes fade{from{opacity:0}to{opacity:1}}@keyframes pop{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}@keyframes float{50%{transform:translateY(18px)}}@keyframes toastIn{from{transform:translateY(10px);opacity:0}to{transform:none;opacity:1}}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:650px){.navbar{height:62px;padding:0 4%}.nav-links{display:none}.logo{font-size:16px}.profile-chip b{display:none}.hero{margin:18px 4%;padding:38px 7%}.hero h1{font-size:38px}.section{margin:28px 4%}.grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.profile-panel{grid-template-columns:auto 1fr}.profile-panel .small-primary{grid-column:1/-1}.window{padding:17px 12px}.memory{grid-template-columns:repeat(4,minmax(55px,1fr));gap:7px}.memory button{width:auto;height:auto;aspect-ratio:1;font-size:25px}.ttt{width:270px}.ttt button{height:78px}.search{width:100%}.search button{padding:10px 12px}.table{font-size:13px}.table th,.table td{padding:10px 7px}.table th:nth-child(3),.table td:nth-child(3){display:none}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<nav class="navbar">
+<div class="logo">🎮 YOUR <span>GAME HUB</span></div>
+<ul class="nav-links"><li><a href="#home">Home</a></li><li><a href="#games">Games</a></li><li><a href="#profile">Profile</a></li><li><a href="#leaderboard">Leaderboard</a></li></ul>
+<button class="profile-chip" onclick="openProfile()"><span class="avatar" id="navAvatar">😎</span><b id="navName">Player</b><span class="coins">🪙 <span id="navCoins">120</span></span></button>
+</nav>
+
+<section class="hero" id="home"><h1>Discover your next game.</h1><p>Play mini-games, complete missions, gain XP, earn coins and climb the local leaderboard.</p><div class="search"><input id="searchInput" placeholder="Search games..." aria-label="Search games"><button onclick="searchGames()">Search</button></div></section>
+
+<section class="section"><div class="stats">
+<div class="stat">Level<strong id="statLevel">1</strong></div><div class="stat">XP<strong id="statXP">0 / 100</strong></div><div class="stat">Coins<strong>🪙 <span id="statCoins">120</span></strong></div><div class="stat">Best Score<strong id="statBest">0</strong></div>
+</div></section>
+
+<section class="section" id="games"><div class="section-head"><div><h2>🔥 Game Arcade</h2><div class="subtle">Six mini-games with reliable controls and progression.</div></div></div>
+<div class="categories"><button class="cat active" onclick="filterGames('all',this)">All</button><button class="cat" onclick="filterGames('action',this)">Action</button><button class="cat" onclick="filterGames('racing',this)">Racing</button><button class="cat" onclick="filterGames('puzzle',this)">Puzzle</button><button class="cat" onclick="filterGames('adventure',this)">Adventure</button><button class="cat" onclick="filterGames('strategy',this)">Strategy</button></div></section>
+
+<section class="section"><div class="grid" id="gameGrid">
+<article class="game-card" data-cat="action" data-name="Snake Pro"><div class="cover action">🐍</div><div class="game-body"><h3>Snake Pro</h3><p>Arcade • Missions • Levels</p><div class="meta"><button class="play" onclick="openGame('snake')">Play</button><button class="fav" onclick="fav(this)">♡</button></div></div></article>
+<article class="game-card" data-cat="strategy" data-name="Tic-Tac-Toe Arena"><div class="cover strategy">❌⭕</div><div class="game-body"><h3>Tic-Tac-Toe Arena</h3><p>Strategy • Streaks • Bot</p><div class="meta"><button class="play" onclick="openGame('ttt')">Play</button><button class="fav" onclick="fav(this)">♡</button></div></div></article>
+<article class="game-card" data-cat="puzzle" data-name="Memory Match+"><div class="cover puzzle">🧠</div><div class="game-body"><h3>Memory Match+</h3><p>Puzzle • Combo • Levels</p><div class="meta"><button class="play" onclick="openGame('memory')">Play</button><button class="fav" onclick="fav(this)">♡</button></div></div></article>
+<article class="game-card" data-cat="action" data-name="Space Shooter X"><div class="cover action">🚀</div><div class="game-body"><h3>Space Shooter X</h3><p>Action • Waves • Bosses</p><div class="meta"><button class="play" onclick="openGame('shooter')">Play</button><button class="fav" onclick="fav(this)">♡</button></div></div></article>
+<article class="game-card" data-cat="racing" data-name="Speed Rush"><div class="cover racing">🏎️</div><div class="game-body"><h3>Speed Rush</h3><p>Racing • Laps • Boost</p><div class="meta"><button class="play" onclick="openGame('racing')">Play</button><button class="fav" onclick="fav(this)">♡</button></div></div></article>
+<article class="game-card" data-cat="adventure" data-name="Lost World"><div class="cover adventure">🌎</div><div class="game-body"><h3>Lost World</h3><p>Adventure • Quests • Crystals</p><div class="meta"><button class="play" onclick="openGame('world')">Play</button><button class="fav" onclick="fav(this)">♡</button></div></div></article>
+</div><div class="empty" id="emptyGames">No games found.</div></section>
+
+<section class="section" id="profile"><div class="section-head"><div><h2>👤 Player Profile</h2><div class="subtle">Progress and favorites are saved in this browser.</div></div><button class="small-primary" onclick="openProfile()">Edit profile</button></div>
+<div class="profile-panel"><div class="big-avatar" id="bigAvatar">😎</div><div><h3 id="profileName">Player</h3><p class="subtle">Level <span id="profileLevel">1</span> • <span id="profileCoins">120</span> coins • Best score <span id="profileBest">0</span></p><div class="progress"><div class="bar" id="xpBar"></div></div></div><div class="coins">🪙 <span id="profileCoins2">120</span></div></div></section>
+
+<section class="section" id="leaderboard"><div class="section-head"><div><h2>🏆 Leaderboard</h2><div class="subtle">Your local score is updated after completed game sessions.</div></div></div>
+<table class="table"><thead><tr><th>#</th><th>Player</th><th>Level</th><th>Score</th><th>Coins</th></tr></thead><tbody id="leaderBody"></tbody></table></section>
+<footer>© 2026 Your Game Hub • Play • Progress • Compete</footer>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Game window"><div class="window"><button class="close" onclick="closeGame()" aria-label="Close">✕</button><h2 class="game-title" id="gameTitle">Game</h2><div id="gameArea"></div></div></div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+'use strict';
+const KEY='gameHubSaveV3';
+const defaultState={name:'Player',avatar:'😎',xp:0,level:1,coins:120,best:0,wins:0,favorites:[]};
+const demoPlayers=[{name:'PixelMaster',level:12,score:980,coins:1450,avatar:'🦊'},{name:'Nova',level:9,score:740,coins:990,avatar:'🚀'},{name:'Shadow',level:7,score:590,coins:780,avatar:'🥷'},{name:'Speedy',level:5,score:420,coins:610,avatar:'🏎️'}];
+let state=loadState(), timers=[], activeCleanup=null;
+
+function loadState(){
+ try{const saved=JSON.parse(localStorage.getItem(KEY)); if(saved&&typeof saved==='object') return {...defaultState,...saved,favorites:Array.isArray(saved.favorites)?saved.favorites:[]};}
+ catch(e){}
+ return {...defaultState};
+}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){} updateUI();renderLeaderboard()}
+function addProgress(xp=0,coins=0,score=0){
+ state.xp+=Math.max(0,xp);state.coins+=Math.max(0,coins);state.best=Math.max(state.best,Math.max(0,score));
+ let levels=0;while(state.xp>=100){state.xp-=100;state.level++;state.coins+=50;levels++}
+ save(); if(levels) toast('🎉 Level up! +'+(levels*50)+' coins');
+}
+function updateUI(){
+ const ids={navName:state.name,navAvatar:state.avatar,navCoins:state.coins,statLevel:state.level,statXP:`${state.xp} / 100`,statCoins:state.coins,statBest:state.best,bigAvatar:state.avatar,profileName:state.name,profileLevel:state.level,profileCoins:state.coins,profileCoins2:state.coins,profileBest:state.best};
+ Object.entries(ids).forEach(([id,v])=>{const e=document.getElementById(id);if(e)e.textContent=v});
+ document.getElementById('xpBar').style.width=state.xp+'%';
+ document.querySelectorAll('.fav').forEach((b)=>{const card=b.closest('.game-card');const n=card?.dataset.name;b.textContent=state.favorites.includes(n)?'♥':'♡';b.style.color=state.favorites.includes(n)?'#159fe5':''});
+}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('show'),2200)}
+function renderLeaderboard(){
+ const rows=[...demoPlayers,{name:state.name,level:state.level,score:state.best,coins:state.coins,avatar:state.avatar,me:true}].sort((a,b)=>b.score-a.score).slice(0,8);
+ document.getElementById('leaderBody').innerHTML=rows.map((p,i)=>`<tr class="${p.me?'me':''}"><td>${i+1}</td><td>${p.avatar} ${escapeHtml(p.name)}</td><td>${p.level}</td><td>${p.score}</td><td>🪙 ${p.coins}</td></tr>`).join('');
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function fav(b){const card=b.closest('.game-card'),n=card.dataset.name;if(state.favorites.includes(n))state.favorites=state.favorites.filter(x=>x!==n);else state.favorites.push(n);save();toast(state.favorites.includes(n)?'❤️ Added to favorites':'Removed from favorites')}
+function filterGames(cat,b){document.querySelectorAll('.cat').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.game-card').forEach(c=>c.style.display=(cat==='all'||c.dataset.cat===cat)?'':'none');document.getElementById('emptyGames').style.display='none'}
+function searchGames(){const q=document.getElementById('searchInput').value.trim().toLowerCase();let count=0;document.querySelectorAll('.game-card').forEach(c=>{const ok=c.dataset.name.toLowerCase().includes(q);c.style.display=ok?'':'none';if(ok)count++});document.getElementById('emptyGames').style.display=count?'none':'block';document.querySelectorAll('.cat').forEach(x=>x.classList.remove('active'))}
+document.getElementById('searchInput').addEventListener('input',searchGames);
+
+function clearTimers(){timers.forEach(x=>clearInterval(x));timers=[]}
+function closeGame(){clearTimers();if(activeCleanup)activeCleanup();activeCleanup=null;document.getElementById('modal').classList.remove('show');document.getElementById('gameArea').innerHTML='';window.onkeydown=null}
+function openGame(type){closeGame();document.getElementById('modal').classList.add('show');({snake:startSnake,ttt:startTTT,memory:startMemory,shooter:startShooter,racing:startRacing,world:startWorld}[type]||startSnake)()}
+document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeGame()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('modal').classList.contains('show'))closeGame()});
+
+function openProfile(){
+ document.getElementById('modal').classList.add('show');document.getElementById('gameTitle').textContent='👤 Edit Profile';
+ document.getElementById('gameArea').innerHTML=`<div class="form"><label for="nameInput">Player name</label><input id="nameInput" value="${escapeHtml(state.name)}" maxlength="18"><label>Avatar</label><div class="avatar-options">${['😎','🦊','🚀','🐼','🥷','🧙','👑'].map(a=>`<button class="${state.avatar===a?'selected':''}" onclick="pickAvatar('${a}',this)">${a}</button>`).join('')}</div><div class="task-box">Changing your profile does not reset your game progress.</div><button class="small-primary" onclick="saveProfile()">Save profile</button></div>`;
+}
+function pickAvatar(a,b){state.avatar=a;document.querySelectorAll('.avatar-options button').forEach(x=>x.classList.remove('selected'));b.classList.add('selected')}
+function saveProfile(){state.name=document.getElementById('nameInput').value.trim()||'Player';save();closeGame();toast('✅ Profile saved')}
+
+/* SNAKE */
+let snakeState;
+function startSnake(){
+ document.getElementById('gameTitle').textContent='🐍 Snake Pro';
+ document.getElementById('gameArea').innerHTML=`<div class="hud"><span class="pill">Score <b id="ss">0</b></span><span class="pill">Level <b id="sl">1</b></span><span class="pill">Food <b id="sf">0/10</b></span></div><canvas class="canvas" id="snakeCanvas" width="420" height="420"></canvas><div class="controls"><button onclick="snakeRestart()">Restart</button><button onclick="toast('🐍 Arrow Keys / WASD')">Controls</button></div>`;
+ snakeRestart();
+}
+function snakeRestart(){
+ clearTimers();const c=document.getElementById('snakeCanvas');if(!c)return;const ctx=c.getContext('2d');
+ snakeState={body:[{x:200,y:200},{x:180,y:200}],dir:{x:20,y:0},next:{x:20,y:0},food:{x:0,y:0},score:0,level:1,foods:0,game:true};
+ snakePlaceFood();window.onkeydown=e=>{const k=e.key.toLowerCase();const d=snakeState.next;if((k==='arrowup'||k==='w')&&d.y===0)snakeState.next={x:0,y:-20};if((k==='arrowdown'||k==='s')&&d.y===0)snakeState.next={x:0,y:20};if((k==='arrowleft'||k==='a')&&d.x===0)snakeState.next={x:-20,y:0};if((k==='arrowright'||k==='d')&&d.x===0)snakeState.next={x:20,y:0}};
+ const timer=setInterval(()=>snakeTick(ctx),Math.max(65,130-(snakeState.level-1)*8));timers.push(timer);
+}
+function snakePlaceFood(){do{snakeState.food={x:Math.floor(Math.random()*21)*20,y:Math.floor(Math.random()*21)*20}}while(snakeState.body.some(p=>p.x===snakeState.food.x&&p.y===snakeState.food.y))}
+function snakeTick(ctx){
+ if(!snakeState.game)return;snakeState.dir=snakeState.next;ctx.fillStyle='#0c202e';ctx.fillRect(0,0,420,420);
+ const h={x:snakeState.body[0].x+snakeState.dir.x,y:snakeState.body[0].y+snakeState.dir.y};
+ if(h.x<0||h.x>=420||h.y<0||h.y>=420||snakeState.body.some(p=>p.x===h.x&&p.y===h.y)){snakeState.game=false;clearTimers();toast('💥 Snake lost!');addProgress(Math.floor(snakeState.score/2)+5,Math.floor(snakeState.score/4),snakeState.score);return}
+ snakeState.body.unshift(h);let ate=h.x===snakeState.food.x&&h.y===snakeState.food.y;
+ if(ate){snakeState.score+=10;snakeState.foods++;if(snakeState.foods%5===0)snakeState.level++;snakePlaceFood()}else snakeState.body.pop();
+ ctx.fillStyle='#67d5ff';snakeState.body.forEach(p=>ctx.fillRect(p.x+2,p.y+2,16,16));ctx.fillStyle='#ff5d79';ctx.fillRect(snakeState.food.x+3,snakeState.food.y+3,14,14);
+ document.getElementById('ss').textContent=snakeState.score;document.getElementById('sl').textContent=snakeState.level;document.getElementById('sf').textContent=`${snakeState.foods}/10`;
+ if(snakeState.foods>=10){snakeState.game=false;clearTimers();toast('🏆 Snake mission complete!');addProgress(50,35,snakeState.score)}
+}
+
+/* TTT */
+function startTTT(){
+ document.getElementById('gameTitle').textContent='❌⭕ Tic-Tac-Toe Arena';
+ document.getElementById('gameArea').innerHTML=`<div class="hud"><span class="pill">Mode: You vs Bot</span><span class="pill">Wins this session: <b id="tw">0</b>/3</span></div><div class="ttt" id="tttBoard"></div><div class="task-box" id="tttStatus">Your turn: X</div><div class="controls"><button onclick="startTTT()">New Session</button></div>`;
+ const b=document.getElementById('tttBoard'),winsets=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];let cells=Array(9).fill(''),wins=0,ended=false;
+ function draw(){b.innerHTML='';cells.forEach((v,i)=>{const x=document.createElement('button');x.textContent=v;x.disabled=!!v||ended;x.onclick=()=>move(i);b.appendChild(x)})}
+ function result(p){return winsets.some(a=>a.every(i=>cells[i]===p))}
+ function move(i){if(cells[i]||ended)return;cells[i]='X';draw();if(result('X'))return finish('🏆 You win!',true);if(!cells.includes(''))return finish('Draw');document.getElementById('tttStatus').textContent='Bot is thinking…';setTimeout(bot,280)}
+ function bot(){if(ended)return;const free=cells.map((v,i)=>v?null:i).filter(i=>i!==null);if(!free.length)return finish('Draw');let i=chooseBotMove(free);cells[i]='O';draw();if(result('O'))return finish('Bot wins');if(!cells.includes(''))return finish('Draw');document.getElementById('tttStatus').textContent='Your turn: X'}
+ function chooseBotMove(free){for(const p of ['O','X'])for(const i of free){cells[i]=p;const win=result(p);cells[i]='';if(win)return i}return free.includes(4)?4:free[Math.floor(Math.random()*free.length)]}
+ function finish(msg,youWin=false){ended=true;document.getElementById('tttStatus').textContent=msg;draw();if(youWin){wins++;state.wins++;document.getElementById('tw').textContent=wins;addProgress(25,20,20);if(wins>=3){toast('🏆 3-win mission complete!');addProgress(35,50,100)}}}
+ draw();
+}
+
+/* MEMORY */
+function startMemory(){
+ document.getElementById('gameTitle').textContent='🧠 Memory Match+';
+ document.getElementById('gameArea').innerHTML=`<div class="hud"><span class="pill">Level <b id="ml">1</b></span><span class="pill">Matches <b id="mm">0</b></span><span class="pill">Mission: complete 2 levels</span></div><div class="memory" id="memoryBoard"></div><div class="controls"><button onclick="startMemory()">Restart Session</button></div>`;
+ let level=1,first=null,lock=false,matches=0,doneTimer=null;
+ activeCleanup=()=>clearTimeout(doneTimer);
+ function makeLevel(){const base=['🎮','🚀','🐍','⚽','🏎️','👾'],symbols=(level===1?base.slice(0,4):base);const deck=[...symbols,...symbols].sort(()=>Math.random()-.5),board=document.getElementById('memoryBoard');board.innerHTML='';first=null;lock=false;matches=0;document.getElementById('ml').textContent=level;document.getElementById('mm').textContent=0;deck.forEach(s=>{const b=document.createElement('button');b.textContent='?';b.dataset.s=s;b.onclick=()=>flip(b);board.appendChild(b)})}
+ function flip(b){if(lock||b.classList.contains('matched')||b===first)return;b.textContent=b.dataset.s;b.classList.add('open');if(!first){first=b;return}const second=b;lock=true;if(first.dataset.s===second.dataset.s){first.classList.add('matched');second.classList.add('matched');matches++;document.getElementById('mm').textContent=matches;first=null;lock=false;const target=level===1?4:6;if(matches===target){if(level===2){toast('🏆 Memory mission complete!');addProgress(60,45,120)}else{addProgress(25,15,60);level++;doneTimer=setTimeout(makeLevel,450)}}}else{doneTimer=setTimeout(()=>{first.textContent='?';second.textContent='?';first.classList.remove('open');second.classList.remove('open');first=null;lock=false},650)}}
+ makeLevel();
+}
+
+/* SHOOTER */
+function startShooter(){
+ document.getElementById('gameTitle').textContent='🚀 Space Shooter X';
+ document.getElementById('gameArea').innerHTML=`<div class="hud"><span class="pill">Score <b id="shs">0</b></span><span class="pill">Wave <b id="wave">1</b></span><span class="pill">Mission: survive 3 waves</span></div><div class="shooter" id="shootArea" style="height:430px;max-width:700px;margin:auto;position:relative;background:radial-gradient(circle at 50% 20%,#173b55,#081623)"></div><div class="controls"><button onclick="startShooter()">Restart</button><span class="subtle">Move with pointer/touch. Tap/click to shoot.</span></div>`;
+ const area=document.getElementById('shootArea'),player=document.createElement('div');player.className='herochar';player.textContent='🚀';player.style.bottom='12px';player.style.left='50%';area.appendChild(player);
+ let score=0,wave=1,kills=0,spawnCount=0,dead=false,lastShot=0;
+ function move(e){const r=area.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*100;player.style.left=Math.max(5,Math.min(95,x))+'%'}area.addEventListener('pointermove',move);
+ function end(){if(dead)return;dead=true;clearTimers();toast('🛸 Game over — score '+score);addProgress(Math.floor(score/10),Math.floor(score/25),score)}
+ function spawn(){if(dead)return;spawnCount++;const enemy=document.createElement('div');enemy.className='enemy';enemy.textContent=spawnCount%9===0?'👹':'👾';enemy.style.left=Math.random()*92+'%';enemy.style.top='-35px';area.appendChild(enemy);let y=-35;const speed=1.3+wave*.55;const t=setInterval(()=>{if(dead){clearInterval(t);return}y+=speed;enemy.style.top=y+'px';const a=enemy.getBoundingClientRect(),p=player.getBoundingClientRect();if(a.left<p.right&&a.right>p.left&&a.top<p.bottom&&a.bottom>p.top){enemy.remove();clearInterval(t);end();return}if(y>area.clientHeight){enemy.remove();clearInterval(t)}},20);timers.push(t)}
+ function shoot(e){if(dead)return;const now=performance.now();if(now-lastShot<150)return;lastShot=now;const r=area.getBoundingClientRect(),x=e.clientX-r.left;const bullet=document.createElement('div');bullet.className='bullet';bullet.style.cssText=`position:absolute;width:5px;height:16px;background:#69d5ff;border-radius:4px;bottom:65px;left:${Math.max(4,x-2)}px;z-index:5`;area.appendChild(bullet);let y=area.clientHeight-65;const t=setInterval(()=>{if(!bullet.isConnected){clearInterval(t);return}y-=10;bullet.style.top=y+'px';const b=bullet.getBoundingClientRect();for(const en of [...area.querySelectorAll('.enemy')]){const a=en.getBoundingClientRect();if(b.left<a.right&&b.right>a.left&&b.top<a.bottom&&b.bottom>a.top){en.remove();bullet.remove();clearInterval(t);score+=20;kills++;wave=Math.min(5,1+Math.floor(kills/6));document.getElementById('shs').textContent=score;document.getElementById('wave').textContent=wave;if(kills>=18){dead=true;clearTimers();toast('🏆 Shooter mission complete!');addProgress(80,60,score)}break}}if(y<0){clearInterval(t);bullet.remove()}},16);timers.push(t)}
+ area.addEventListener('pointerdown',shoot);timers.push(setInterval(spawn,700));
+}
+
+/* RACING */
+function startRacing(){
+ document.getElementById('gameTitle').textContent='🏎️ Speed Rush';
+ document.getElementById('gameArea').innerHTML=`<div class="hud"><span class="pill">Distance <b id="rd">0</b> m</span><span class="pill">Level <b id="rl">1</b></span><span class="pill">Mission: reach 600 m</span></div><div class="race" id="race"><div class="roadline"></div><div class="car" id="car">🏎️</div></div><div class="controls"><button onclick="startRacing()">Restart Race</button><span class="subtle">A/D or Arrow Keys • touch the sides to steer</span></div>`;
+ const road=document.getElementById('race'),car=document.getElementById('car');let x=165,dist=0,level=1,alive=true,obs=[];
+ function steer(dir){if(!alive)return;x=Math.max(22,Math.min(308,x+dir*28));car.style.left=x+'px'}
+ window.onkeydown=e=>{const k=e.key.toLowerCase();if(k==='arrowleft'||k==='a'){e.preventDefault();steer(-1)}if(k==='arrowright'||k==='d'){e.preventDefault();steer(1)}};
+ road.addEventListener('pointerdown',e=>{const r=road.getBoundingClientRect();steer(e.clientX-r.left<r.width/2?-1:1)});
+ function addObstacle(){const o=document.createElement('div');o.className='obstacle';o.textContent=Math.random()>.5?'🚧':'🚙';o.style.top='-45px';o.style.left=Math.random()*270+'px';road.appendChild(o);obs.push({el:o,y:-45})}
+ const t=setInterval(()=>{if(!alive)return;dist+=2+level;level=Math.min(5,1+Math.floor(dist/180));document.getElementById('rd').textContent=dist;document.getElementById('rl').textContent=level;if(Math.random()<.035+level*.007)addObstacle();obs.forEach(o=>{o.y+=2+level;o.el.style.top=o.y+'px';const cr=car.getBoundingClientRect(),or=o.el.getBoundingClientRect();if(cr.left<or.right&&cr.right>or.left&&cr.top<or.bottom&&cr.bottom>or.top){alive=false;clearTimers();toast('💥 Crash! Score saved.');addProgress(Math.floor(dist/10),Math.floor(dist/30),dist)}});obs=obs.filter(o=>{if(o.y>510){o.el.remove();return false}return true});if(dist>=600&&alive){alive=false;clearTimers();toast('🏁 Race mission complete!');addProgress(90,80,dist)}},30);timers.push(t)
+}
+
+/* LOST WORLD */
+function startWorld(){
+ document.getElementById('gameTitle').textContent='🌎 Lost World';
+ document.getElementById('gameArea').innerHTML=`<div class="hud"><span class="pill">Quest <b id="qd">0 / 5</b></span><span class="pill">Crystals <b id="wc">0</b></span><span class="pill">Goal: collect 5 crystals</span></div><div class="world" id="world"><div class="ground"></div><div class="herochar" id="herochar" style="left:40px;top:280px">🧙</div><div class="npc" style="left:82%;top:275px">🧌</div></div><div class="task-box">Controls: Arrow Keys / WASD. On touch, tap the world to move toward that point. Collect 💎 and avoid the troll.</div><div class="controls"><button onclick="startWorld()">Restart Quest</button></div>`;
+ const world=document.getElementById('world'),hero=document.getElementById('herochar');let x=40,y=280,col=0,items=[];for(let i=0;i<7;i++){const c=document.createElement('div');c.className='coin';c.textContent='💎';c.style.left=(60+Math.random()*620)+'px';c.style.top=(150+Math.random()*190)+'px';world.appendChild(c);items.push(c)}
+ function collect(){items.forEach(c=>{if(c.style.display==='none')return;const a=hero.getBoundingClientRect(),b=c.getBoundingClientRect();if(a.left<b.right&&a.right>b.left&&a.top<b.bottom&&a.bottom>b.top){c.style.display='none';col++;document.getElementById('wc').textContent=col;document.getElementById('qd').textContent=Math.min(col,5)+' / 5';addProgress(5,8,20);if(col>=5){toast('🏆 Quest complete!');addProgress(50,55,150)}}})}
+ function move(dx,dy){x=Math.max(5,Math.min(world.clientWidth-45,x+dx));y=Math.max(110,Math.min(350,y+dy));hero.style.left=x+'px';hero.style.top=y+'px';collect()}
+ window.onkeydown=e=>{const k=e.key.toLowerCase();if(['arrowup','w'].includes(k))move(0,-15);if(['arrowdown','s'].includes(k))move(0,15);if(['arrowleft','a'].includes(k))move(-15,0);if(['arrowright','d'].includes(k))move(15,0)}
+ world.addEventListener('pointerdown',e=>{const r=world.getBoundingClientRect();x=Math.max(5,Math.min(world.clientWidth-45,e.clientX-r.left-20));y=Math.max(110,Math.min(350,e.clientY-r.top-25));hero.style.left=x+'px';hero.style.top=y+'px';collect()})
+}
+
+/* init */
+updateUI();renderLeaderboard();
+</script>
+</body>
+</html>
